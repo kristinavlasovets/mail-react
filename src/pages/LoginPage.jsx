@@ -29,7 +29,7 @@ export const LoginPage = () => {
 				value={name}
 			/>
 			<Button
-				sx={{m: '20px auto', width: 200}}
+				sx={{m: '20px auto', width: 100}}
 				type="submit"
 				variant="contained"
 			>
