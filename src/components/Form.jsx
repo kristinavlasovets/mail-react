@@ -16,27 +16,27 @@ export const Form = () => {
 			onSubmit={handleSubmit}
 			sx={{
 				m: '5vh auto',
-				width: 500,
+				width: '80vw',
 				display: 'flex',
 				flexDirection: 'column',
 			}}
 		>
 			<TextField
-				sx={{m: '5px auto', width: 300}}
+				sx={{m: '5px auto', width: '100%'}}
 				onChange={(event) => setReceiver(event.target.value)}
 				label="Receiver"
 				variant="outlined"
 				value={receiver}
 			/>
 			<TextField
-				sx={{m: '5px auto', width: 300}}
+				sx={{m: '5px auto', width: '100%'}}
 				onChange={(event) => setSubject(event.target.value)}
 				label="Subject"
 				variant="outlined"
 				value={subject}
 			/>
 			<TextareaAutosize
-				style={{margin: '10px auto', width: 300}}
+				style={{margin: '10px auto', width: '100%'}}
 				onChange={(event) => setText(event.target.value)}
 				minRows={5}
 				placeholder=" ..."
