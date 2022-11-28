@@ -1,15 +1,24 @@
 import React, {useState} from 'react';
-import {Box, TextField, TextareaAutosize, Button} from '@mui/material';
+import {
+	Box,
+	Autocomplete,
+	TextField,
+	TextareaAutosize,
+	Button,
+} from '@mui/material';
+import axios from 'axios';
 
-export const Form = () => {
-	const [receiver, setReceiver] = useState('');
+export const Form = ({users}) => {
+	const [receiver, setReceiver] = useState(null);
 	const [subject, setSubject] = useState('');
 	const [text, setText] = useState('');
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log('sent');
+
+		const response = await axios.post();
 	};
+
 	return (
 		<Box
 			component="form"
@@ -21,12 +30,20 @@ export const Form = () => {
 				flexDirection: 'column',
 			}}
 		>
-			<TextField
-				sx={{m: '5px auto', width: '100%'}}
-				onChange={(event) => setReceiver(event.target.value)}
-				label="Receiver"
-				variant="outlined"
+			<Autocomplete
+				disablePortal
 				value={receiver}
+				onChange={(event, newValue) => {
+					setReceiver(newValue);
+				}}
+				options={users}
+				autoHighlight
+				getOptionLabel={(option) => option.username}
+				isOptionEqualToValue={(option, value) =>
+					option.username === value.username
+				}
+				sx={{width: '100%'}}
+				renderInput={(params) => <TextField {...params} label="Receiver" />}
 			/>
 			<TextField
 				sx={{m: '5px auto', width: '100%'}}
