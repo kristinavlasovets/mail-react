@@ -11,28 +11,26 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import axios from 'axios';
+import moment from 'moment';
 
-export const Letter = ({letter, currentUser}) => {
-	const [user, setUser] = useState(null);
+export const Letter = ({currentUser, letter}) => {
+	const [sender, setSender] = useState(null);
 	const [open, setOpen] = React.useState(false);
 
-	// useEffect(() => {
-	// 	if (conversation) {
-	// 		const friendId = conversation?.members.find((m) => m !== currentUser._id);
-
-	// 		const getUser = async () => {
-	// 			try {
-	// 				const res = await axios(
-	// 					'http://localhost:5000/enter/users/' + friendId
-	// 				);
-	// 				setUser(res.data);
-	// 			} catch (e) {
-	// 				console.log(e);
-	// 			}
-	// 		};
-	// 		getUser();
-	// 	}
-	// }, [conversation, currentUser]);
+	useEffect(() => {
+		const getUser = async () => {
+			const senderId = letter.sender;
+			try {
+				const res = await axios(
+					'http://localhost:5000/enter/users/' + senderId
+				);
+				setSender(res.data);
+			} catch (e) {
+				console.log(e);
+			}
+		};
+		getUser();
+	}, [letter, currentUser]);
 
 	const handleClick = () => {
 		setOpen(!open);
@@ -58,14 +56,16 @@ export const Letter = ({letter, currentUser}) => {
 					{open ? <ExpandLess /> : <ExpandMore />}
 				</ListItemButton>
 				<ListItemButton>
-					<ListItemText>From: {user?.username}</ListItemText>
-					<ListItemText>Sent: </ListItemText>
+					<ListItemText>From: {sender?.username}</ListItemText>
+					<ListItemText>
+						Sent: {moment(letter.sendTime).format('lll')}
+					</ListItemText>
 				</ListItemButton>
 
 				<Collapse in={open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
 						<ListItemButton sx={{pl: 4}}>
-							<ListItemText></ListItemText>
+							<ListItemText>{letter.text}</ListItemText>
 						</ListItemButton>
 					</List>
 				</Collapse>

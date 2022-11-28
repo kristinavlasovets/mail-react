@@ -7,17 +7,45 @@ import {
 	Button,
 } from '@mui/material';
 import axios from 'axios';
+import {useEnterContext} from '../context/enterContext';
+import {useEffect} from 'react';
 
-export const Form = ({users}) => {
+export const Form = () => {
+	const [users, setUsers] = useState([]);
 	const [receiver, setReceiver] = useState(null);
 	const [subject, setSubject] = useState('');
 	const [text, setText] = useState('');
 
+	const {user} = useEnterContext();
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		const response = await axios.post();
+		const response = await axios.post('http://localhost:5000/conversations', {
+			senderId: user._id,
+			receiverId: receiver._id,
+		});
+		console.log(response.data);
+		const responseLetter = await axios.post('http://localhost:5000/letters', {
+			conversationId: response.data._id,
+			sender: user._id,
+			receiver: receiver._id,
+			subject: subject,
+			text: text,
+		});
+		console.log(responseLetter);
 	};
+
+	useEffect(() => {
+		const getUsers = async () => {
+			try {
+				const res = await axios.get('http://localhost:5000/enter/users');
+				setUsers(res.data);
+			} catch (e) {
+				console.log(e);
+			}
+		};
+		getUsers();
+	}, []);
 
 	return (
 		<Box
