@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { Conversation } from "../components/Conversation";
-import {Letter} from '../components/Letter'
+import {Letter} from "../components/Letter"
 
 export const MainPage = () => {
   const [conversations, setConversations] = useState([]);
@@ -40,6 +40,8 @@ export const MainPage = () => {
     };
     getLetters();
   }, []);
+
+  console.log(letters)
   const handleLogout = () => {
     dispatch(LogoutAction());
   };
@@ -50,15 +52,16 @@ export const MainPage = () => {
         Logout
       </Button>
       <Form />
-      {/* {conversations.map((c, id) => (
+      {conversations.map((c, id) => (
         <Conversation
           key={id}
           conversation={c}
           currentUser={user}
           lettersData={letters}
         />
-      ))} */}
-      {letters.filter((letter) => letter.sender !== user._id).map((letter) => (<Letter letters={letters} />))}
+      ))}
+      <Letter/>
+      
     </Box>
   );
 };
