@@ -20,6 +20,7 @@ export const Letter = ({currentUser, letter}) => {
 	useEffect(() => {
 		const getUser = async () => {
 			const senderId = letter.sender;
+			console.log(letter);
 			try {
 				const res = await axios(
 					'http://localhost:5000/enter/users/' + senderId

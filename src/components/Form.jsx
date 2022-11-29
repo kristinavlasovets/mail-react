@@ -7,14 +7,16 @@ import {
 	Button,
 } from '@mui/material';
 import axios from 'axios';
+import {io} from 'socket.io-client';
 import {useEnterContext} from '../context/enterContext';
 import {useEffect} from 'react';
 
-export const Form = () => {
+export const Form = ({socket, setLetters}) => {
 	const [users, setUsers] = useState([]);
 	const [receiver, setReceiver] = useState(null);
 	const [subject, setSubject] = useState('');
 	const [text, setText] = useState('');
+	const [arrivalLetter, setArrivalLetter] = useState(null);
 
 	const {user} = useEnterContext();
 
@@ -24,7 +26,7 @@ export const Form = () => {
 			senderId: user._id,
 			receiverId: receiver._id,
 		});
-		console.log(response.data);
+
 		const responseLetter = await axios.post('http://localhost:5000/letters', {
 			conversationId: response.data._id,
 			sender: user._id,
@@ -32,8 +34,34 @@ export const Form = () => {
 			subject: subject,
 			text: text,
 		});
-		console.log(responseLetter);
+
+		socket.current.emit('sendLetter', {
+			conversationId: response.data._id,
+			sender: user._id,
+			receiver: receiver._id,
+			subject: subject,
+			text: text,
+		});
 	};
+	useEffect(() => {
+		socket.current = io('ws://localhost:8900');
+		socket.current.on('getLetter', (data) => {
+			setArrivalLetter({
+				sender: data.sender,
+				receiver: data.receiver,
+				text: data.text,
+				subject: data.subject,
+				conversationId: data.conversationId,
+				sendTime: Date.now(),
+			});
+		});
+	}, []);
+
+	useEffect(() => {
+		if (arrivalLetter) {
+			setLetters((prev) => [arrivalLetter, ...prev]);
+		}
+	}, [arrivalLetter]);
 
 	useEffect(() => {
 		const getUsers = async () => {
@@ -44,16 +72,21 @@ export const Form = () => {
 				console.log(e);
 			}
 		};
-		getUsers();
-	}, []);
+
+		socket.current.emit('addUser', user._id);
+		socket.current.on('getUsers', (users) => {
+			getUsers();
+		});
+	}, [user]);
 
 	return (
 		<Box
 			component="form"
 			onSubmit={handleSubmit}
 			sx={{
-				m: '5vh auto',
-				width: '80vw',
+				m: '9vh 9vw',
+				width: '50vw',
+				maxWidth: 600,
 				display: 'flex',
 				flexDirection: 'column',
 			}}
@@ -74,22 +107,40 @@ export const Form = () => {
 				renderInput={(params) => <TextField {...params} label="Receiver" />}
 			/>
 			<TextField
-				sx={{m: '5px auto', width: '100%'}}
+				sx={{m: '10px auto', width: '100%'}}
 				onChange={(event) => setSubject(event.target.value)}
 				label="Subject"
 				variant="outlined"
 				value={subject}
 			/>
 			<TextareaAutosize
-				style={{margin: '10px auto', width: '100%'}}
+				style={{
+					width: '95%',
+					padding: '10px',
+					fontSize: '22px',
+					fontFamily: 'Roboto',
+					color: '#245943',
+					border: '1px solid #B2A9A3',
+					borderRadius: '5px',
+				}}
 				onChange={(event) => setText(event.target.value)}
-				minRows={5}
+				minRows={3}
 				placeholder=" ..."
-				variant="outlined"
 				value={text}
 			/>
 			<Button
-				sx={{m: '20px auto', width: 100}}
+				sx={{
+					m: '20px auto',
+					width: 200,
+					fontSize: '22px',
+					backgroundColor: '#245943',
+					'&:hover': {
+						cursor: 'pointer',
+						backgroundColor: '#9CF27A',
+						color: '#245943',
+						fontWeight: 700,
+					},
+				}}
 				type="submit"
 				variant="contained"
 			>

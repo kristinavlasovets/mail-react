@@ -22,18 +22,39 @@ export const LoginPage = () => {
 			onSubmit={handleEnter}
 		>
 			<TextField
-				sx={{m: '0 auto', width: 200}}
+				sx={{
+					m: '0 auto',
+					width: 200,
+				}}
+				inputProps={{
+					sx: {
+						fontSize: '22px',
+						color: '#245943',
+					},
+				}}
 				onChange={(event) => setName(event.target.value)}
 				label="Your name"
 				variant="outlined"
+				color="action"
 				value={name}
 			/>
 			<Button
-				sx={{m: '20px auto', width: 100}}
+				sx={{
+					m: '20px auto',
+					width: 200,
+					fontSize: '22px',
+					backgroundColor: '#245943',
+					'&:hover': {
+						cursor: 'pointer',
+						backgroundColor: '#9CF27A',
+						color: '#245943',
+						fontWeight: 700,
+					},
+				}}
 				type="submit"
 				variant="contained"
 			>
-				Enter
+				Check Inbox
 			</Button>
 		</Box>
 	);
