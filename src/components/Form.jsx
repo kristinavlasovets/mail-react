@@ -23,7 +23,7 @@ export const Form = ({socket, setLetters}) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const response = await axios.post(
-			process.env.REACT_APP_SERVER_URL + '/conversations',
+			'https://mail-nodejs-production.up.railway.app' + '/conversations',
 			{
 				senderId: user._id,
 				receiverId: receiver._id,
@@ -31,7 +31,7 @@ export const Form = ({socket, setLetters}) => {
 		);
 
 		const responseLetter = await axios.post(
-			process.env.REACT_APP_SERVER_URL + '/letters',
+			'https://mail-nodejs-production.up.railway.app' + '/letters',
 			{
 				conversationId: response.data._id,
 				sender: user._id,
@@ -50,7 +50,7 @@ export const Form = ({socket, setLetters}) => {
 		});
 	};
 	useEffect(() => {
-		socket.current = io(process.env.REACT_APP_SOCKET_URL);
+		socket.current = io('https://mail-socket-production.up.railway.app');
 		socket.current.on('getLetter', (data) => {
 			setArrivalLetter({
 				sender: data.sender,
@@ -73,7 +73,7 @@ export const Form = ({socket, setLetters}) => {
 		const getUsers = async () => {
 			try {
 				const res = await axios.get(
-					process.env.REACT_APP_SERVER_URL + '/enter/users'
+					'https://mail-nodejs-production.up.railway.app' + '/enter/users'
 				);
 				setUsers(res.data);
 			} catch (e) {

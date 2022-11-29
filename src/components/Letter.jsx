@@ -23,7 +23,9 @@ export const Letter = ({currentUser, letter}) => {
 
 			try {
 				const res = await axios(
-					process.env.REACT_APP_SERVER_URL + '/enter/users/' + senderId
+					'https://mail-nodejs-production.up.railway.app' +
+						'/enter/users/' +
+						senderId
 				);
 				setSender(res.data);
 			} catch (e) {

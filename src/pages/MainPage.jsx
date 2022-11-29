@@ -18,7 +18,9 @@ export const MainPage = () => {
 		const getConversations = async () => {
 			try {
 				const res = await axios.get(
-					process.env.REACT_APP_SERVER_URL + '/conversations/' + user._id
+					'https://mail-nodejs-production.up.railway.app' +
+						'/conversations/' +
+						user._id
 				);
 				setConversations(res.data);
 			} catch (e) {
@@ -34,7 +36,9 @@ export const MainPage = () => {
 				const requests = await Promise.all(
 					conversations.map((conversation) =>
 						axios.get(
-							process.env.REACT_APP_SERVER_URL + '/letters/' + conversation._id
+							'https://mail-nodejs-production.up.railway.app' +
+								'/letters/' +
+								conversation._id
 						)
 					)
 				);
