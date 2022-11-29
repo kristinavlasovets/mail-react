@@ -18,7 +18,7 @@ export const MainPage = () => {
 		const getConversations = async () => {
 			try {
 				const res = await axios.get(
-					'http://localhost:5000/conversations/' + user._id
+					process.env.REACT_APP_SERVER_URL + '/conversations/' + user._id
 				);
 				setConversations(res.data);
 			} catch (e) {
@@ -33,7 +33,9 @@ export const MainPage = () => {
 			try {
 				const requests = await Promise.all(
 					conversations.map((conversation) =>
-						axios.get('http://localhost:5000/letters/' + conversation._id)
+						axios.get(
+							process.env.REACT_APP_SERVER_URL + '/letters/' + conversation._id
+						)
 					)
 				);
 

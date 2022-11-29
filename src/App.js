@@ -6,7 +6,6 @@ import {useEnterContext} from './context/enterContext';
 
 export const App = () => {
 	const {isEntered, user} = useEnterContext();
-	console.log(user);
 	return isEntered ? (
 		<Routes>
 			<Route path="/main" element={<MainPage />} />

@@ -20,10 +20,10 @@ export const Letter = ({currentUser, letter}) => {
 	useEffect(() => {
 		const getUser = async () => {
 			const senderId = letter.sender;
-			console.log(letter);
+
 			try {
 				const res = await axios(
-					'http://localhost:5000/enter/users/' + senderId
+					process.env.REACT_APP_SERVER_URL + '/enter/users/' + senderId
 				);
 				setSender(res.data);
 			} catch (e) {
@@ -64,7 +64,16 @@ export const Letter = ({currentUser, letter}) => {
 				</ListItemButton>
 
 				<Collapse in={open} timeout="auto" unmountOnExit>
-					<List component="div" disablePadding>
+					<List
+						sx={{
+							m: '15px 30px',
+							backgroundColor: 'whitesmoke',
+							border: '1px solid whitesmoke',
+							borderRadius: '5px',
+						}}
+						component="div"
+						disablePadding
+					>
 						<ListItemButton sx={{pl: 4}}>
 							<ListItemText>{letter.text}</ListItemText>
 						</ListItemButton>

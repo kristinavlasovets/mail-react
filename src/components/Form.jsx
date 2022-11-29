@@ -22,18 +22,24 @@ export const Form = ({socket, setLetters}) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const response = await axios.post('http://localhost:5000/conversations', {
-			senderId: user._id,
-			receiverId: receiver._id,
-		});
+		const response = await axios.post(
+			process.env.REACT_APP_SERVER_URL + '/conversations',
+			{
+				senderId: user._id,
+				receiverId: receiver._id,
+			}
+		);
 
-		const responseLetter = await axios.post('http://localhost:5000/letters', {
-			conversationId: response.data._id,
-			sender: user._id,
-			receiver: receiver._id,
-			subject: subject,
-			text: text,
-		});
+		const responseLetter = await axios.post(
+			process.env.REACT_APP_SERVER_URL + '/letters',
+			{
+				conversationId: response.data._id,
+				sender: user._id,
+				receiver: receiver._id,
+				subject: subject,
+				text: text,
+			}
+		);
 
 		socket.current.emit('sendLetter', {
 			conversationId: response.data._id,
@@ -44,7 +50,7 @@ export const Form = ({socket, setLetters}) => {
 		});
 	};
 	useEffect(() => {
-		socket.current = io('ws://localhost:8900');
+		socket.current = io(process.env.REACT_APP_SOCKET_URL);
 		socket.current.on('getLetter', (data) => {
 			setArrivalLetter({
 				sender: data.sender,
@@ -66,7 +72,9 @@ export const Form = ({socket, setLetters}) => {
 	useEffect(() => {
 		const getUsers = async () => {
 			try {
-				const res = await axios.get('http://localhost:5000/enter/users');
+				const res = await axios.get(
+					process.env.REACT_APP_SERVER_URL + '/enter/users'
+				);
 				setUsers(res.data);
 			} catch (e) {
 				console.log(e);
